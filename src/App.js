@@ -24,7 +24,6 @@ export default function App() {
   async function handleLikeRepository(id) {
     // Implement "Like Repository" functionality
     const response = await api.post(`repositories/${id}/like`);
-    console.log("response.data:" + response.data);
     const likeUpdated = response.data;
     
     const repositoriesUpdated = repositories.map(repository => {
@@ -72,7 +71,7 @@ export default function App() {
                 onPress={() => handleLikeRepository(item.id)}
                 // onPress={() => handleLikeRepository(1)}
                 // Remember to replace "1" below with repository ID: {`like-button-${repository.id}`}
-                testID={`like-button-1`}
+                testID={`like-button-${item.id}`}
               >
                 <Text style={styles.buttonText}>Curtir</Text>
               </TouchableOpacity>
