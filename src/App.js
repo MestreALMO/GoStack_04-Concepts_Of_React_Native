@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -23,12 +23,26 @@ export default function App() {
 
   async function handleLikeRepository(id) {
     // Implement "Like Repository" functionality
+    const response = await api.post(`repositories/${id}/like`);
+    console.log("response.data:" + response.data);
+    const likeUpdated = response.data;
+    
+    const repositoriesUpdated = repositories.map(repository => {
+      if(repository.id == id) {
+        return likeUpdated;
+      } else {
+        return repository;
+      }
+    });
+
+    setRepositories(repositoriesUpdated);
   }
 
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
       <SafeAreaView style={styles.container}>
+
         <FlatList
           data={repositories}
           keyExtractor={repository => repository.id}
@@ -38,10 +52,7 @@ export default function App() {
 
               <View style={styles.techsContainer}>
                 <Text style={styles.tech}>
-                  ReactJS
-                </Text>
-                <Text style={styles.tech}>
-                  Node.js
+                  {item.techs}
                 </Text>
               </View>
 
@@ -49,15 +60,17 @@ export default function App() {
                 <Text
                   style={styles.likeText}
                   // Remember to replace "1" below with repository ID: {`repository-likes-${repository.id}`}
-                  testID={`repository-likes-1`}
+                  // testID={`repository-likes-1`}
+                  testID={`repository-likes-${item.id}`}
                 >
-                  3 curtidas
+                  {item.likes} curtidas
                 </Text>
               </View>
 
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleLikeRepository(1)}
+                onPress={() => handleLikeRepository(item.id)}
+                // onPress={() => handleLikeRepository(1)}
                 // Remember to replace "1" below with repository ID: {`like-button-${repository.id}`}
                 testID={`like-button-1`}
               >
@@ -66,6 +79,7 @@ export default function App() {
             </View>
           )}
         />
+
       </SafeAreaView>
     </>
   );
